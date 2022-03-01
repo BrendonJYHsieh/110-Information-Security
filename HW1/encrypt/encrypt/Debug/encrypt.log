@@ -1,0 +1,8 @@
+﻿  encrypt.cpp
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(24,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(52,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(58,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(90,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(108,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(144,23): warning C4018: '<': signed/unsigned 不相符
+  encrypt.vcxproj -> C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\Debug\encrypt.exe
