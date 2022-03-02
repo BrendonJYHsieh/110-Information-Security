@@ -1,8 +1,13 @@
 ﻿  encrypt.cpp
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(24,23): warning C4018: '<': signed/unsigned 不相符
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(52,23): warning C4018: '<': signed/unsigned 不相符
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(58,23): warning C4018: '<': signed/unsigned 不相符
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(90,23): warning C4018: '<': signed/unsigned 不相符
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(108,23): warning C4018: '<': signed/unsigned 不相符
-C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(144,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(26,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(54,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(60,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(92,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(110,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(146,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(156,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(160,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(164,23): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(210,27): warning C4018: '<': signed/unsigned 不相符
+C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\encrypt\encrypt.cpp(213,37): warning C4018: '>=': signed/unsigned 不相符
   encrypt.vcxproj -> C:\Users\JunYao\Desktop\110-Information-Security\HW1\encrypt\Debug\encrypt.exe

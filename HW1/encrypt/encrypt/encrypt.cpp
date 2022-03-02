@@ -3,9 +3,11 @@
 
 using namespace std;
 
-string Caesar(char* plaintext, int shift);
+void Caesar(char* plaintext, int shift);
 void Playfair(char* plaintext, char* key);
-
+void Vernam(char* plaintext, char* key);
+void RailFence(char* plaintext, char* key);
+void RowTransition(char* plaintext, char* key);
 
 int main(int argc, char* argv[]) {
     /*std::cout << "We have " << argc << " arguments" << std::endl;
@@ -13,14 +15,13 @@ int main(int argc, char* argv[]) {
         std::cout << "[" << i << "] " << argv[i] << std::endl;
     }*/
     char test[] = "helloworld";
-    char key[] = "test";
+    char key[] = "3";
     
-    Playfair(test, key);
+    RailFence(test, key);
     
     return 0;
 }
-
-string Caesar(char* plaintext, int shift) {
+void Caesar(char* plaintext, int shift) {
     for (int i = 0; i < strlen(plaintext); i++) {
         if ((plaintext[i] + shift) >= 123) {
             plaintext[i] = toupper((plaintext[i] + shift) % 123 + 'a');
@@ -32,9 +33,8 @@ string Caesar(char* plaintext, int shift) {
             plaintext[i] = toupper((plaintext[i] + shift) % 123);
         }
     }
-    return plaintext;
+    cout << plaintext << endl;
 }   
-
 void Playfair(char* plaintext, char* key) {
 
     vector<char>input;
@@ -146,4 +146,74 @@ void Playfair(char* plaintext, char* key) {
         cout<<code[i];
     }
     cout << endl;
+}
+void Vernam(char* plaintext, char* key) {
+    vector<int>keystream;
+
+    for (int i = 0; i < strlen(key); i++) {
+        keystream.push_back(key[i] - 'a');
+    }
+
+    for (int i = 0; i < strlen(plaintext)-strlen(key); i++) {
+        keystream.push_back(plaintext[i] - 'a');
+    }
+
+    for (int i = 0; i < keystream.size(); i++) {
+        if ((plaintext[i] + keystream[i]) >= 123) {
+            plaintext[i] = toupper((plaintext[i] + keystream[i]) % 123 + 'a');
+        }
+        else {
+            plaintext[i] = toupper((plaintext[i] + keystream[i]) % 123);
+        }
+    }
+    cout << plaintext << endl;
+}
+void RailFence(char* plaintext, char* key) {
+
+    int row = key[0] - '0';
+    int col = strlen(plaintext);
+    vector<vector<char> > chipertext(row, vector<char>(col, ' '));
+    int current_row = 0;
+    bool increase = true;
+    for (int i = 0; i < col; i++) {
+        chipertext[current_row][i] = plaintext[i];
+        if (current_row == row - 1) {
+            increase = false;
+        }
+        else if(current_row ==0){
+            increase = true;
+        }
+        if (increase) {
+            current_row++;
+        }
+        else {
+            current_row--;
+        }
+    }
+    for (int j = 0; j < row; j++) {
+        for (int k = 0; k < col; k++) {
+            if (chipertext[j][k] != ' ') {
+                cout << (char)toupper(chipertext[j][k]);
+            }     
+        }
+    }
+}
+void RowTransition(char* plaintext, char* key) {
+    int col = strlen(key);
+    int count = 1;
+    while (count != col+1) {
+        for (int i = 0; i < strlen(key); i++) {
+            if (count == key[i] - '0') {
+                for (int j = 0; j < 4; j++) {
+                    if (j * col + i >= strlen(plaintext)) {
+                        cout << "-";
+                    }
+                    else {
+                        cout << (char)toupper(plaintext[j * col + i]);
+                    }
+                }
+                count++;
+            }
+        }
+    }
 }
