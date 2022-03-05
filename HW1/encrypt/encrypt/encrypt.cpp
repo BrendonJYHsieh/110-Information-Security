@@ -1,27 +1,57 @@
 ﻿#include<iostream>
+#include<string>
 #include<vector>
 
 using namespace std;
 
-void Caesar(char* plaintext, int shift);
+void Caesar(char* plaintext, char* key);
 void Playfair(char* plaintext, char* key);
 void Vernam(char* plaintext, char* key);
 void RailFence(char* plaintext, char* key);
 void RowTransition(char* plaintext, char* key);
 
 int main(int argc, char* argv[]) {
-    /*std::cout << "We have " << argc << " arguments" << std::endl;
+    char* method = NULL;
+    char* plaintext = NULL;
+    char* key = NULL;
+
     for (int i = 0; i < argc; ++i) {
-        std::cout << "[" << i << "] " << argv[i] << std::endl;
-    }*/
-    char test[] = "helloworld";
-    char key[] = "3";
-    
-    RailFence(test, key);
-    
+        if (strcmp(argv[i], "-m")==0) {
+            method = new char[strlen(argv[i + 1])];
+            method = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-i") == 0) {
+            plaintext = new char[strlen(argv[i + 1])];
+            plaintext = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-k") == 0) {
+            key = new char[strlen(argv[i + 1])];
+            key = argv[i + 1];
+        }
+    }
+    if (strcmp(method,"caesar")==0) {
+        Caesar(plaintext, key);
+    }
+    else  if (strcmp(method, "playfair") == 0) {
+        Playfair(plaintext, key);
+    }
+    else  if (strcmp(method, "vernam") == 0) {
+        Vernam(plaintext, key);
+    }
+    else  if (strcmp(method, "railfence") == 0) {
+        RailFence(plaintext, key);
+    }
+    else  if (strcmp(method, "row") == 0) {
+        RowTransition(plaintext, key);
+    }
     return 0;
 }
-void Caesar(char* plaintext, int shift) {
+void Caesar(char* plaintext, char* key) {
+
+    int shift = atoi(key);
+
     for (int i = 0; i < strlen(plaintext); i++) {
         if ((plaintext[i] + shift) >= 123) {
             plaintext[i] = toupper((plaintext[i] + shift) % 123 + 'a');
