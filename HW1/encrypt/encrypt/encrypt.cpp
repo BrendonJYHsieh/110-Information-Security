@@ -15,6 +15,10 @@ int main(int argc, char* argv[]) {
     char* plaintext = NULL;
     char* key = NULL;
 
+    char a[] = "attackpostponeduntiltwoamxyzabc";
+    char b[] = "4312567";
+
+    RowTransition(a, b);
     for (int i = 0; i < argc; ++i) {
         if (strcmp(argv[i], "-m")==0) {
             method = new char[strlen(argv[i + 1])];
@@ -31,23 +35,24 @@ int main(int argc, char* argv[]) {
             key = argv[i + 1];
         }
     }
-    if (strcmp(method,"caesar")==0) {
+    if (strcmp(method,"caesar") == 0) {
         Caesar(plaintext, key);
     }
-    else  if (strcmp(method, "playfair") == 0) {
+    else if(strcmp(method, "playfair") == 0) {
         Playfair(plaintext, key);
     }
-    else  if (strcmp(method, "vernam") == 0) {
+    else if(strcmp(method, "vernam") == 0) {
         Vernam(plaintext, key);
     }
-    else  if (strcmp(method, "railfence") == 0) {
+    else if(strcmp(method, "railfence") == 0) {
         RailFence(plaintext, key);
     }
-    else  if (strcmp(method, "row") == 0) {
+    else if(strcmp(method, "row") == 0) {
         RowTransition(plaintext, key);
     }
     return 0;
 }
+
 void Caesar(char* plaintext, char* key) {
 
     int shift = atoi(key);
@@ -179,22 +184,14 @@ void Playfair(char* plaintext, char* key) {
 }
 void Vernam(char* plaintext, char* key) {
     vector<int>keystream;
-
     for (int i = 0; i < strlen(key); i++) {
         keystream.push_back(key[i] - 'a');
     }
-
     for (int i = 0; i < strlen(plaintext)-strlen(key); i++) {
         keystream.push_back(plaintext[i] - 'a');
     }
-
     for (int i = 0; i < keystream.size(); i++) {
-        if ((plaintext[i] + keystream[i]) >= 123) {
-            plaintext[i] = toupper((plaintext[i] + keystream[i]) % 123 + 'a');
-        }
-        else {
-            plaintext[i] = toupper((plaintext[i] + keystream[i]) % 123);
-        }
+        plaintext[i] = toupper(((plaintext[i]-'a') ^ keystream[i]) + 'a');
     }
     cout << plaintext << endl;
 }
@@ -230,13 +227,17 @@ void RailFence(char* plaintext, char* key) {
 }
 void RowTransition(char* plaintext, char* key) {
     int col = strlen(key);
+    int row = strlen(plaintext) / col;
+    if (strlen(plaintext) % col != 0) {
+        row += 1;
+    }       
     int count = 1;
     while (count != col+1) {
         for (int i = 0; i < strlen(key); i++) {
             if (count == key[i] - '0') {
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < row; j++) {
                     if (j * col + i >= strlen(plaintext)) {
-                        cout << "-";
+                        continue;
                     }
                     else {
                         cout << (char)toupper(plaintext[j * col + i]);
