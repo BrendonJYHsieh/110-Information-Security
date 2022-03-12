@@ -15,10 +15,6 @@ int main(int argc, char* argv[]) {
     char* plaintext = NULL;
     char* key = NULL;
 
-    char a[] = "attackpostponeduntiltwoamxyzabc";
-    char b[] = "4312567";
-
-    RowTransition(a, b);
     for (int i = 0; i < argc; ++i) {
         if (strcmp(argv[i], "-m")==0) {
             method = new char[strlen(argv[i + 1])];
