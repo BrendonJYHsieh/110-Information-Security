@@ -5,10 +5,15 @@
 using namespace std;
 
 void Caesar(char* plaintext, char* key);
+//encrypt.exe -m caesar -i hellofrakw -k 4
 void Playfair(char* plaintext, char* key);
+//encrypt.exe -m playfair -i hidethegoldinthetreestump -k plairfairexample
 void Vernam(char* plaintext, char* key);
+//encrypt.exe -m vernam -i helo -k xm
 void RailFence(char* plaintext, char* key);
+//encrypt.exe -m railfence -i wearediscoveredfleeatonce -k 3
 void RowTransition(char* plaintext, char* key);
+//encrypt.exe -m row -i attackpostponeduntiltwoamxyz -k 4312567
 
 int main(int argc, char* argv[]) {
     char* method = NULL;

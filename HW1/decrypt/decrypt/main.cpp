@@ -3,14 +3,19 @@
 #include <vector>
 #include <set>
 #include <utility>
-//#define arg
+#define arg
 using namespace std;
 
 void Caesar(string ciphertext, string key);
+//decrypt.exe -m caesar -i LIPPSJVEOA -k 4
 void Playfair(string ciphertext, string key);
+//decrypt.exe -m playfair -i SMODSKXDVEHLONDMZBXMMONZFI -k plairfairexample
 void Vernam(string ciphertext, string key);
+//decrypt.exe -m vernam -i QIMK -k xm
 void RailFence(string ciphertext, string key);
+//decrypt.exe -m railfence -i WECRLTEERDSOEEFEAOCAIVDEN -k 3
 void RowTransition(string ciphertext, string key);
+//decrypt.exe -m row -i TTNAAPTMTSUOAODWCOIXKNLYPETZ -k 4312567
 
 #ifdef arg
 int main(int argc, char* argv[]) {
