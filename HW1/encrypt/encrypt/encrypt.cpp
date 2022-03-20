@@ -64,7 +64,7 @@ void Caesar(char* plaintext, char* key) {
             plaintext[i] = toupper((plaintext[i] + shift) % 123);
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }   
 void Playfair(char* plaintext, char* key) {
 
@@ -135,7 +135,6 @@ void Playfair(char* plaintext, char* key) {
     //cout << endl;
 
     Pair a, b;
-
     for (int i = 0; i < input.size(); i++) {
         for (int j = 0; j < 5; j++) {
             for (int k = 0; k < 5; k++) {
@@ -153,7 +152,6 @@ void Playfair(char* plaintext, char* key) {
                 }
             }
         }
-        //cout << "Pair:" << input[i] << " " << input[i + 1] << endl;
         i++;
         // Same Row
         if (a.i == b.i) {
@@ -170,13 +168,11 @@ void Playfair(char* plaintext, char* key) {
             code.push_back(table[a.i][b.j]);
             code.push_back(table[b.i][a.j]);
         }
-        
     }
     for (int i = 0; i < code.size(); i++) {
         code[i] = toupper(code[i]);
         cout<<code[i];
     }
-    cout << endl;
 }
 void Vernam(char* plaintext, char* key) {
     vector<int>keystream;
@@ -189,7 +185,7 @@ void Vernam(char* plaintext, char* key) {
     for (int i = 0; i < keystream.size(); i++) {
         plaintext[i] = toupper(((plaintext[i]-'a') ^ keystream[i]) + 'a');
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
 void RailFence(char* plaintext, char* key) {
 
