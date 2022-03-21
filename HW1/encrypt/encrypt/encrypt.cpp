@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
 void Caesar(char* plaintext, char* key) {
 
-    int shift = atoi(key);
+    int shift = atoi(key)%26;
 
     for (int i = 0; i < strlen(plaintext); i++) {
         if ((plaintext[i] + shift) >= 123) {
