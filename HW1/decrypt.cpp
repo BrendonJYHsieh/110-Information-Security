@@ -81,7 +81,7 @@ void Caesar(string ciphertext, string key) {
             plaintext.push_back(tolower(minus_pos + 'A'));
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
 
 void Playfair(string ciphertext, string key) {
@@ -120,7 +120,7 @@ void Playfair(string ciphertext, string key) {
         }
     }
     if ((ciphertext.length()) % 2 != 0) {
-        cout << "ciphertext error" << endl;
+        cout << "ciphertext error";
         return;
     }
     vector<pair<char,char>> pairs;
@@ -153,7 +153,7 @@ void Playfair(string ciphertext, string key) {
             plaintext.push_back(tolower(table[pos2.first][pos1.second]));
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
 
 //vernam(autokey)
@@ -165,7 +165,7 @@ void Vernam(string ciphertext, string key) {
             key.push_back(plaintext.back());
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
 
 void RailFence(string ciphertext, string key) {
@@ -196,7 +196,7 @@ void RailFence(string ciphertext, string key) {
             }
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
 
 void RowTransition(string ciphertext, string key) {
@@ -236,5 +236,5 @@ void RowTransition(string ciphertext, string key) {
             plaintext[j * cols + col] = tolower(ciphertext[index++]);
         }
     }
-    cout << plaintext << endl;
+    cout << plaintext;
 }
