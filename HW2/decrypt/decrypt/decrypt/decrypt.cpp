@@ -166,9 +166,13 @@ void keygeneration(bitset<64> key) {
 bitset<32> f(bitset<32> R, bitset<48> key){
 	bitset<48> expandR;
 	for (int i = 0; i < 48; i++) {
-		expandR[i] = R[32 - E[i]];
+		expandR[47-i] = R[32 - E[i]];
 	}
+	cout << "key: " << key << endl;
+	cout << "E(R): " << expandR << endl;
 	expandR = expandR ^ key;
+	cout << "K + E(R): " << expandR << endl;
+	
 
 	bitset<32> output;
 	int count = 0;
@@ -200,36 +204,42 @@ bitset<64> charToBitset(const char s[8])
 
 int main()
 {
-	bitset<64> plain;
+	bitset<64> plain(std::string("0000000100100011010001010110011110001001101010111100110111101111"));
 	bitset<64> IP_plain;
 	bitset<32> left;
 	bitset<32> right;
-	bitset<64> key;
+	bitset<64> key(std::string("0001001100110100010101110111100110011011101111001101111111110001"));
 	bitset<32> newLeft;
 
 	string s = "romantic";
-	string k = "000";
+	string k = "0E329232EA6D0D73";
 
-	plain = charToBitset(s.c_str());
-	key = charToBitset(k.c_str());
-	cout << plain << endl;
-	cout << key << endl;
+	//plain = charToBitset(s.c_str());
+	//key = charToBitset(k.c_str());
+	//cout << plain << endl;
+	//cout << key << endl;
 
 	keygeneration(key);
+
 	// Initial permutation
 	for (int i = 0; i < 64; i++) {
 		IP_plain[63-i] = plain[64-IP[i]];
 	}
 	// Divide IP_plain into left and right
 	for (int i = 0; i < 32; i++) {
+		left[i] = IP_plain[i + 32];
 		right[i] = IP_plain[i];
-		left[i] = IP_plain[i+32];
+		
 	}
-	for (int round = 0; round < 16; ++round)
+	cout << "left:  " << left << endl;
+	cout << "right: " << right << endl;
+	for (int round = 0; round < 16; round++)
 	{
 		newLeft = right;
-		right = left ^ f(right, subKey[15 - round]);
+		right = left ^ f(right, subKey[round]);
 		left = newLeft;
+		cout << "left:  " << left << endl;
+		cout << "right: " << right << endl;
 	}
 	// 第四步：合并L16和R16，注意合并为 R16L16
 	for (int i = 0; i < 32; ++i)
@@ -240,6 +250,8 @@ int main()
 	IP_plain = plain;
 	for (int i = 0; i < 64; ++i)
 		plain[63 - i] = IP_plain[64 - FP[i]];
-	// 返回明文
+
 	cout << plain << endl;
+	// 返回明文
+	//cout << plain << endl;
 }
