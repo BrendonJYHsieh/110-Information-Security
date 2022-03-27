@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <bitset>
-
+#include <vector>
 using namespace std;
 
 // Init Permutation
@@ -222,24 +222,55 @@ void output(bitset<64> bits)
 	cout << endl;
 }
 
-int main()
-{
+string input_process(string input) {
+	input.erase(0, 2);
+	string output = "";
+	for (int i = 0; i < input.size(); i++) {
+		for (int k = 0; k < 16; k++) {
+			if (input[i] == _hex[k]) {
+				output += bits4[k];
+				break;
+			}
+		}
+	}
+	int count = output.size();
+	for (int i = 0; i < 64 - count; i++) {
+		output = '0' + output;
+	}
+	return output;
+}
+
+#ifdef arg
+int main(int argc, char* argv[]) {
+#else
+int main() {
+	int argc = 5;
+	const char* argv[5];
+	argv[0] = "";
+	argv[1] = "-i"; argv[2] = "0x854CB4CE7143D216"; 
+	argv[3] = "-k"; argv[4] = "0x123";
+	//0x854CB4CE7143D216
+#endif // arg
+
+	string s_plain = argv[2];
+	string s_key = argv[4];
+
+	s_plain = input_process(s_plain);
+	s_key = input_process(s_key);
+
+	
+
 	//0123456789ABCDEF
-	bitset<64> plain(std::string("0000000100100011010001010110011110001001101010111100110111101111"));
+	bitset<64> plain(s_plain);
 	bitset<64> IP_plain;
 	bitset<32> left;
 	bitset<32> right;
 	//133457799BBCDFF1
-	bitset<64> key(std::string("0001001100110100010101110111100110011011101111001101111111110001"));
+	bitset<64> key(s_key);
 	bitset<32> newLeft;
 
-	string s = "romantic";
-	string k = "0E329232EA6D0D73";
-
-	//plain = charToBitset(s.c_str());
-	//key = charToBitset(k.c_str());
-	//cout << plain << endl;
-	//cout << key << endl;
+	//output(plain);
+	//output(key);
 
 	keygeneration(key);
 
@@ -251,13 +282,12 @@ int main()
 	for (int i = 0; i < 32; i++) {
 		left[i] = IP_plain[i + 32];
 		right[i] = IP_plain[i];
-		
 	}
 
 	for (int round = 0; round < 16; round++)
 	{
 		newLeft = right;
-		right = left ^ f(right, subKey[round]);
+		right = left ^ f(right, subKey[15-round]);
 		left = newLeft;
 	}
 	// 第四步：合并L16和R16，注意合并为 R16L16
@@ -269,9 +299,5 @@ int main()
 	for (int i = 0; i < 64; ++i) {
 		plain[63 - i] = IP_plain[64 - FP[i]];
 	}
-
 	output(plain);
-	
-	cout<< plain << endl;
-
 }
