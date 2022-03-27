@@ -260,20 +260,16 @@ int main() {
 
 	
 
-	//0123456789ABCDEF
 	bitset<64> plain(s_plain);
 	bitset<64> IP_plain;
 	bitset<32> left;
 	bitset<32> right;
-	//133457799BBCDFF1
 	bitset<64> key(s_key);
 	bitset<32> newLeft;
 
 	//output(plain);
 	//output(key);
-
 	keygeneration(key);
-
 	// Initial permutation
 	for (int i = 0; i < 64; i++) {
 		IP_plain[63-i] = plain[64-IP[i]];
@@ -283,14 +279,12 @@ int main() {
 		left[i] = IP_plain[i + 32];
 		right[i] = IP_plain[i];
 	}
-
 	for (int round = 0; round < 16; round++)
 	{
 		newLeft = right;
 		right = left ^ f(right, subKey[15-round]);
 		left = newLeft;
 	}
-	// 第四步：合并L16和R16，注意合并为 R16L16
 	for (int i = 0; i < 32; i++) {
 		plain[i] = left[i];
 		plain[i + 32] = right[i];
