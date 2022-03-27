@@ -117,6 +117,9 @@ int P[] = { 16,  7, 20, 21,
 		   22, 11,  4, 25 };
 
 
+char _hex[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+string bits4[16] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
+
 bitset<64> key;                
 bitset<48> subKey[16];
 
@@ -168,11 +171,7 @@ bitset<32> f(bitset<32> R, bitset<48> key){
 	for (int i = 0; i < 48; i++) {
 		expandR[47-i] = R[32 - E[i]];
 	}
-	cout << "key: " << key << endl;
-	cout << "E(R): " << expandR << endl;
 	expandR = expandR ^ key;
-	cout << "K + E(R): " << expandR << endl;
-	
 
 	bitset<32> output;
 	int count = 0;
@@ -202,12 +201,35 @@ bitset<64> charToBitset(const char s[8])
 	return bits;
 }
 
+void output(bitset<64> bits)
+{
+	cout << "0x";
+	for (int i = 63; i >= 0; i-=4) {
+		bitset<4> temp;
+		temp[3] = bits[i];
+		temp[2] = bits[i-1];
+		temp[1] = bits[i-2];
+		temp[0] = bits[i-3];
+		for (int k = 0; k < 16; k++) {
+			if (temp.to_string() == bits4[k]) {
+				cout << _hex[k];
+			}
+		}
+		if (i % 4 == 0) {
+			cout << " ";
+		}
+	}
+	cout << endl;
+}
+
 int main()
 {
+	//0123456789ABCDEF
 	bitset<64> plain(std::string("0000000100100011010001010110011110001001101010111100110111101111"));
 	bitset<64> IP_plain;
 	bitset<32> left;
 	bitset<32> right;
+	//133457799BBCDFF1
 	bitset<64> key(std::string("0001001100110100010101110111100110011011101111001101111111110001"));
 	bitset<32> newLeft;
 
@@ -231,27 +253,25 @@ int main()
 		right[i] = IP_plain[i];
 		
 	}
-	cout << "left:  " << left << endl;
-	cout << "right: " << right << endl;
+
 	for (int round = 0; round < 16; round++)
 	{
 		newLeft = right;
 		right = left ^ f(right, subKey[round]);
 		left = newLeft;
-		cout << "left:  " << left << endl;
-		cout << "right: " << right << endl;
 	}
 	// 第四步：合并L16和R16，注意合并为 R16L16
-	for (int i = 0; i < 32; ++i)
+	for (int i = 0; i < 32; i++) {
 		plain[i] = left[i];
-	for (int i = 32; i < 64; ++i)
-		plain[i] = right[i - 32];
-	// 第五步：结尾置换IP-1
+		plain[i + 32] = right[i];
+	}
 	IP_plain = plain;
-	for (int i = 0; i < 64; ++i)
+	for (int i = 0; i < 64; ++i) {
 		plain[63 - i] = IP_plain[64 - FP[i]];
+	}
 
-	cout << plain << endl;
-	// 返回明文
-	//cout << plain << endl;
+	output(plain);
+	
+	cout<< plain << endl;
+
 }
