@@ -44,6 +44,7 @@ int PC2[] = { 14, 17, 11, 24,  1,  5,
 			  30, 40, 51, 45, 33, 48,
 			  44, 49, 39, 56, 34, 53,
 			  46, 42, 50, 36, 29, 32 };
+
 int shiftBits[] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
 
 // For f function
@@ -116,7 +117,6 @@ int P[] = { 16,  7, 20, 21,
 		   19, 13, 30,  6,
 		   22, 11,  4, 25 };
 
-
 char _hex[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 string bits4[16] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
 
@@ -151,10 +151,8 @@ void keygeneration(bitset<64> key) {
 			C[i] = PC1_Key[i + 28];
 			D[i] = PC1_Key[i];
 		}
-		// 左移
 		C = leftShift(C, shiftBits[r]);
 		D = leftShift(D, shiftBits[r]);
-		// 压缩置换，由56位得到48位子密钥	
 		for (int i = 0; i < 28; ++i) {
 			PC1_Key[i] = D[i];
 			PC1_Key[i+28] = C[i];
@@ -190,15 +188,6 @@ bitset<32> f(bitset<32> R, bitset<48> key){
 	for (int i = 0; i < 32; i++)
 		output[31 - i] = temp[32 - P[i]];
 	return output;
-}
-
-bitset<64> charToBitset(const char s[8])
-{
-	bitset<64> bits;
-	for (int i = 0; i < 8; ++i)
-		for (int j = 0; j < 8; ++j)
-			bits[i * 8 + j] = ((s[i] >> j) & 1);
-	return bits;
 }
 
 void output(bitset<64> bits)
@@ -258,8 +247,6 @@ int main() {
 	s_plain = input_process(s_plain);
 	s_key = input_process(s_key);
 
-	
-
 	bitset<64> plain(s_plain);
 	bitset<64> IP_plain;
 	bitset<32> left;
@@ -267,8 +254,6 @@ int main() {
 	bitset<64> key(s_key);
 	bitset<32> newLeft;
 
-	//output(plain);
-	//output(key);
 	keygeneration(key);
 	// Initial permutation
 	for (int i = 0; i < 64; i++) {
