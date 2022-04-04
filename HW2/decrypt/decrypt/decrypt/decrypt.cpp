@@ -231,6 +231,15 @@ string input_process(string input) {
 	return output;
 }
 
+//http://des.online-domain-tools.com/
+//decrypt.exe -i 0x854CB4CE7143D216 -k 0x123 => 0x0000000000000456
+
+//decrypt.exe -i 0x0A39396BA1320DF9 -k 0xaa0a55988353b839 => 0x6F02839CE4BC767E
+//decrypt.exe -i 0xE66576C9A1C26B0F -k 0xc873c906296d8632 => 0x09C455D95BCAEB6C
+//decrypt.exe -i 0x262928ED36AD8C65 -k 0x78f85dd5d1cbcbbc => 0x649C10F88C9B8CF2
+//decrypt.exe -i 0x284896A01AF1F88A -k 0xd49f5d03c10a8704 => 0xE1057EC85A68BA41
+//decrypt.exe -i 0x3C33733E954C2618 -k 0x38251c7b87dc0008 => 0x5393EB01E25E7383
+
 #ifdef arg
 int main(int argc, char* argv[]) {
 #else

@@ -5,6 +5,7 @@
 #include <vector>
 #include <bitset>
 #include <algorithm>
+#include <iomanip>
 #define arg
 using namespace std;
 
@@ -180,6 +181,14 @@ bitset<32> F(bitset<32> R, bitset<48> round_key) {
 	return result;
 }
 
+//http://des.online-domain-tools.com/
+//encrypt.exe -i 0x456 -k 0x123 => 0x854CB4CE7143D216
+
+//encrypt.exe -i 0x6f02839ce4bc767e -k 0xaa0a55988353b839 => 0x0A39396BA1320DF9
+//encrypt.exe -i 0x09c455d95bcaeb6c -k 0xc873c906296d8632 => 0xE66576C9A1C26B0F
+//encrypt.exe -i 0x649c10f88c9b8cf2 -k 0x78f85dd5d1cbcbbc => 0x262928ED36AD8C65
+//encrypt.exe -i 0xe1057ec85a68ba41 -k 0xd49f5d03c10a8704 => 0x284896A01AF1F88A
+//encrypt.exe -i 0x5393eb01e25e7383 -k 0x38251c7b87dc0008 => 0x3C33733E954C2618
 
 
 #ifdef arg
@@ -241,6 +250,6 @@ int main() {
 	//combine L R plaintext and Final Permutation  64 bit -> 64 bit
 	bitset<64> ciphertext = permutation<64, 64>(bitset_concat(L, R), final_perm);
 	//output
-	cout << "0x" << hex << uppercase << ciphertext.to_ullong() << endl;
+	cout << "0x" << setw(16) << setfill('0') << hex << uppercase << ciphertext.to_ullong() << endl;
 	return 0;
 }
