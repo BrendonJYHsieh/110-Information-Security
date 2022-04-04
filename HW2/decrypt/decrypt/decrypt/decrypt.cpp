@@ -4,7 +4,7 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
-//#define arg
+#define arg
 
 using namespace std;
 
