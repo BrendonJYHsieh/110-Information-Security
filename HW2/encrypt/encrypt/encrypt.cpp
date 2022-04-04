@@ -184,63 +184,63 @@ bitset<32> F(bitset<32> R, bitset<48> round_key) {
 
 #ifdef arg
 int main(int argc, char* argv[]) {
-    if (argc != 5) {
-        cout << "parameter error!\n";
-        return 0;
-    }
+	if (argc != 5) {
+		cout << "parameter error!\n";
+		return 0;
+	}
 #else
 int main() {
-    int argc = 5;
-    const char* argv[7];
-    argv[0] = "";
-    argv[1] = "-i"; argv[2] = "0x456";
-    argv[3] = "-k"; argv[4] = "0x123";
+	int argc = 5;
+	const char* argv[7];
+	argv[0] = "";
+	argv[1] = "-i"; argv[2] = "0x456";
+	argv[3] = "-k"; argv[4] = "0x123";
 #endif // arg
-    bitset<64> plaintext;
-    bitset<64> key64;
+	bitset<64> plaintext;
+	bitset<64> key64;
 	//read parameter to bitset
-    for (int i = 1; i < 5; i++) {
-        if (strcmp(argv[i], "-i") == 0) {
-            plaintext = bitset<64>(strtoull(argv[i + 1], NULL, 16));
-        }
-        else if (strcmp(argv[i], "-k") == 0) {
-            key64 = bitset<64>(strtoull(argv[i + 1], NULL, 16));
-        }
-    }
+	for (int i = 1; i < 5; i++) {
+		if (strcmp(argv[i], "-i") == 0) {
+			plaintext = bitset<64>(strtoull(argv[i + 1], NULL, 16));
+		}
+		else if (strcmp(argv[i], "-k") == 0) {
+			key64 = bitset<64>(strtoull(argv[i + 1], NULL, 16));
+		}
+	}
 	//Initial Permutation  64 bit -> 64 bit
-    plaintext = permutation<64, 64>(plaintext, initial_perm);
+	plaintext = permutation<64, 64>(plaintext, initial_perm);
 	//PC1 key 64 bit -> 56 bit
-    bitset<56> key56 = permutation<64, 56>(key64, PC1);
+	bitset<56> key56 = permutation<64, 56>(key64, PC1);
 	//split plaintext 64 bit -> 2 * 32 bit
 	bitset<32> L = bitset<32>(((plaintext >> 32) & divider64).to_ullong());
-    bitset<32> R = bitset<32>((plaintext & divider64).to_ullong());
+	bitset<32> R = bitset<32>((plaintext & divider64).to_ullong());
 	//split key 56 bit -> 2 * 28 bit
 	bitset<28> L_key = bitset<28>(((key56 >> 28) & divider56).to_ullong());
-    bitset<28> R_key = bitset<28>((key56 & divider56).to_ullong());
+	bitset<28> R_key = bitset<28>((key56 & divider56).to_ullong());
 	//16 round
-    for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 16; i++) {
 		//shift L R key
-        if (shift_table[i] == 1) {
+		if (shift_table[i] == 1) {
 			L_key = permutation<28, 28>(L_key, shift_left1);
-            R_key = permutation<28, 28>(R_key, shift_left1);           
-        }
-        else if (shift_table[i] == 2) {
+			R_key = permutation<28, 28>(R_key, shift_left1);
+		}
+		else if (shift_table[i] == 2) {
 			L_key = permutation<28, 28>(L_key, shift_left2);
-            R_key = permutation<28, 28>(R_key, shift_left2);           
-        }
+			R_key = permutation<28, 28>(R_key, shift_left2);
+		}
 		//combine L R key
-        bitset<56> combine = bitset_concat(L_key, R_key);
+		bitset<56> combine = bitset_concat(L_key, R_key);
 		//PC2 key 56 bit -> 48 bit
-        bitset<48> round_key = permutation<56, 48>(combine, PC2);
+		bitset<48> round_key = permutation<56, 48>(combine, PC2);
 		//F function and xor with L plaintext
-        L = L ^ F(R, round_key);
+		L = L ^ F(R, round_key);
 		//swap L and R
-        swap(L, R);
-    }
-    swap(L, R); //dont swap on last round, so swap back
+		swap(L, R);
+	}
+	swap(L, R); //dont swap on last round, so swap back
 	//combine L R plaintext and Final Permutation  64 bit -> 64 bit
-    bitset<64> ciphertext = permutation<64, 64>(bitset_concat(L, R), final_perm);
+	bitset<64> ciphertext = permutation<64, 64>(bitset_concat(L, R), final_perm);
 	//output
-    cout << "0x" << hex << uppercase << ciphertext.to_ullong() << endl;
-    return 0;
+	cout << "0x" << hex << uppercase << ciphertext.to_ullong() << endl;
+	return 0;
 }
