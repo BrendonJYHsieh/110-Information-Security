@@ -4,6 +4,8 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
+#define arg
+
 using namespace std;
 
 // Init Permutation
