@@ -4,7 +4,7 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
-#define arg
+//#define arg
 
 using namespace std;
 
@@ -206,19 +206,16 @@ void output(bitset<64> bits)
 				cout << _hex[k];
 			}
 		}
-		if (i % 4 == 0) {
-			cout << " ";
-		}
 	}
-	cout << endl;
 }
 
 string input_process(string input) {
+	
 	input.erase(0, 2);
 	string output = "";
 	for (int i = 0; i < input.size(); i++) {
 		for (int k = 0; k < 16; k++) {
-			if (input[i] == _hex[k]) {
+			if (toupper(input[i]) == _hex[k]) {
 				output += bits4[k];
 				break;
 			}
@@ -238,8 +235,8 @@ int main() {
 	int argc = 5;
 	const char* argv[5];
 	argv[0] = "";
-	argv[1] = "-i"; argv[2] = "0x854CB4CE7143D216"; 
-	argv[3] = "-k"; argv[4] = "0x123";
+	argv[1] = "-i"; argv[2] = "0x0A39396BA1320DF9"; 
+	argv[3] = "-k"; argv[4] = "0xaa0A55988353B839";
 	//0x854CB4CE7143D216
 #endif // arg
 
