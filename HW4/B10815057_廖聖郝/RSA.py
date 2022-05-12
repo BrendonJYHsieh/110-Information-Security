@@ -2,47 +2,43 @@ import random
 import base64
 import sys
 
-def fast_power_mod(base, exponent, mod_num): #sqare and multiply algorithm
-    bins = bin(exponent)
-    result = 1
-    for index in range(0,len(bins)):
-        result = (result * result) % mod_num
-        if bins[index] == '1':
-            result = (result * base) % mod_num
+#生成所有key
+# p q為大質數
+# n 為 p*q phi_n為(p-1)*(q-1)
+# e為公鑰 d為私鑰
+def key_gen(bit_count):
+    p = prime_gen(int(bit_count))
+    q = prime_gen(int(bit_count))
+    n = p * q
+    phi_n = (p-1)*(q-1)
+    public_key = random.randint(2,phi_n)
+    if public_key % 2 == 0:
+        public_key += 1
+    while not is_coprime(public_key,phi_n):
+        public_key += 2
+    #private_key = mod_inverse(public_key,phi_n)
+    #private_key = pow(public_key,phi_n-2,phi_n)
+    private_key = pow(public_key,-1,phi_n)
+
+    print("p = {}".format(p))
+    print("q = {}".format(q))
+    print("n = {}".format(n))
+    print("phi = {}".format(phi_n))
+    print("e = {}".format(public_key))
+    print("d = {}".format(private_key))
+    return
+
+#生成一個指定bit數範圍內的質數
+def prime_gen(bit_count):
+    result = random.getrandbits(bit_count)
+    if result % 2 == 0:
+        result += 1
+    while miller_rabin(result) == False:
+        result += 2
     return result
 
-def mod_inverse(a, m):
-    m0 = m
-    y = 0
-    x = 1 
-    if (m == 1):
-        return 0 
-    while (a > 1):
-        q = a // m
-        t = m
-        m = a % m
-        a = t
-        t = y
-        y = x - q * y
-        x = t
-    if (x < 0):
-        x = x + m0 
-    return x
-
-def gcd(a,b):
-    if b <= 1 or b >= a:
-        return -1
-
-    while b != 0:
-        a, b = b, a % b
-    return a
-def is_coprime(a, b):
-    if a >= b:
-        return gcd(a, b) == 1
-    else:
-        return gcd(b, a) == 1
-    
-
+#miller rabin演算法
+#用於判斷一個數字是否為質數
 def miller_rabin(check_num):   
     if check_num == 2 or check_num == 3:
         return True    
@@ -67,62 +63,25 @@ def miller_rabin(check_num):
             return False
     return True
 
-def prime_gen(bit_count):
-    result = random.getrandbits(bit_count)
-    if result % 2 == 0:
-        result += 1
-    while miller_rabin(result) == False:
-        result += 2
-    return result
+#求a b最大公因數(無遞迴版本)，大的數字要放在a
+def gcd(a,b):
+    if b <= 1 or b >= a:
+        return -1
 
-def key_gen(bit_count):
-    p = prime_gen(int(bit_count))
-    q = prime_gen(int(bit_count))
-    n = p * q
-    phi_n = (p-1)*(q-1)
-    public_key = random.randint(2,phi_n)
-    if public_key % 2 == 0:
-        public_key += 1
-    while not is_coprime(public_key,phi_n):
-        public_key += 2
-    private_key = mod_inverse(public_key,phi_n)
+    while b != 0:
+        a, b = b, a % b
+    return a
 
-    print("p = {}".format(p))
-    print("q = {}".format(q))
-    print("n = {}".format(n))
-    print("phi = {}".format(phi_n))
-    print("e = {}".format(public_key))
-    print("d = {}".format(private_key))
-    return
+#確認a b是否互質，也就是確認a b的最大公因數是不是1
+#會先判斷a b大小，將大的放在第一個參數，以配合gcd
+def is_coprime(a, b):
+    if a >= b:
+        return gcd(a, b) == 1
+    else:
+        return gcd(b, a) == 1
 
-def RSA_encrypt(plain_num,n,public_key):
-    cipher_num = fast_power_mod(plain_num,public_key,n)
-    return cipher_num
-
-def RSA_decrypt(cipher_num,n,private_key):
-    plain_num = fast_power_mod(cipher_num,private_key,n)
-    return plain_num
-
-def RSA_CRT_decrypt(cipher_num,p,q,private_key):
-    dp = private_key % (p-1)
-    dq = private_key % (q-1)
-    q_inv = mod_inverse(q,p)
-    m1 = fast_power_mod(cipher_num,dp,p)
-    m2 = fast_power_mod(cipher_num,dq,q)
-    h = q_inv * (m1-m2) % p
-    result = m2 + h * q
-    return int(result)
-
-def str2num(input):
-    m_bytes = input.encode('utf-8')
-    m_num = int.from_bytes(m_bytes, 'little')
-    return m_num
-
-def num2str(input):
-    m_bytes = input.to_bytes((input.bit_length() + 7) // 8, 'little')
-    m_str = m_bytes.decode('utf-8')
-    return m_str
-
+#加密函式，輸入待加密訊息(str)與n和公鑰
+#並將RSA加密後的數字透過base64編碼，使其能夠顯示
 def encrypt(plain_text,n,public_key):
     plain_num = str2num(plain_text)
     cipher_num = RSA_encrypt(plain_num,n,public_key)
@@ -130,18 +89,73 @@ def encrypt(plain_text,n,public_key):
     cipher_text = cipher_base64.decode('ascii')
     return cipher_text
 
+#RSA加密，輸入一數字與n和公鑰
+#算出加密後的數字
+def RSA_encrypt(plain_num,n,public_key):
+    cipher_num = fast_power_mod(plain_num,public_key,n)
+    return cipher_num
+
+#計算(base^exponent) mod mod_num
+#採用sqare and multiply algorithm加速
+def fast_power_mod(base, exponent, mod_num): 
+    bins = bin(exponent)
+    result = 1
+    for index in range(0,len(bins)):
+        result = (result * result) % mod_num
+        if bins[index] == '1':
+            result = (result * base) % mod_num
+    return result
+
+#解密函式，輸入加密後訊息(base64的str)與n和私鑰
+#解密出數字後，將數字轉回原始訊息
 def decrypt(cipher_text,n,private_key):
     cipher_num = int(base64.b64decode(cipher_text).decode('ascii'))
     plain_num = RSA_decrypt(cipher_num,n,private_key)
     plain_text = num2str(plain_num)
     return plain_text
 
+#RSA解密，輸入一加密數字與n和私鑰
+#算出解密後的數字
+def RSA_decrypt(cipher_num,n,private_key):
+    plain_num = fast_power_mod(cipher_num,private_key,n)
+    return plain_num
+
+#CRT加速之解密函式，輸入加密後訊息(base64的str)與p與q和私鑰
+#解密出數字後，將數字轉回原始訊息
 def CRT_decrypt(cipher_text,p,q,private_key):
     cipher_num = int(base64.b64decode(cipher_text).decode('ascii'))
     plain_num = RSA_CRT_decrypt(cipher_num,p,q,private_key)
     plain_text = num2str(plain_num)
     return plain_text
 
+#RSA CRT解密，輸入一數字與p與q和私鑰
+#算出解密後的數字
+def RSA_CRT_decrypt(cipher_num,p,q,private_key):
+    dp = private_key % (p-1)
+    dq = private_key % (q-1)
+    #q_inv = mod_inverse(q,p)
+    q_inv = pow(q,-1,p)
+    m1 = fast_power_mod(cipher_num,dp,p)
+    m2 = fast_power_mod(cipher_num,dq,q)
+    h = q_inv * (m1-m2) % p
+    result = m2 + h * q
+    return int(result)
+
+#將字串轉為一個數字
+#採用python內建之encode函式
+def str2num(input):
+    m_bytes = input.encode('utf-8')
+    m_num = int.from_bytes(m_bytes, 'little')
+    return m_num
+
+#將數字轉為字串
+#採用python內建之decode函式
+def num2str(input):
+    m_bytes = input.to_bytes((input.bit_length() + 7) // 8, 'little')
+    m_str = m_bytes.decode('utf-8')
+    return m_str
+
+# 主函式，同時負責輸入例外處理
 def main():
     argc = len(sys.argv)
     try:
