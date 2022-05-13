@@ -1,7 +1,6 @@
 import random
 import base64
 import sys
-
 #生成所有key
 # p q為大質數
 # n 為 p*q phi_n為(p-1)*(q-1)
@@ -16,9 +15,7 @@ def key_gen(bit_count):
         public_key += 1
     while not is_coprime(public_key,phi_n):
         public_key += 2
-    #private_key = mod_inverse(public_key,phi_n)
-    #private_key = pow(public_key,phi_n-2,phi_n)
-    private_key = pow(public_key,-1,phi_n)
+    private_key = mod_inverse(public_key,phi_n)
 
     print("p = {}".format(p))
     print("q = {}".format(q))
@@ -80,6 +77,30 @@ def is_coprime(a, b):
     else:
         return gcd(b, a) == 1
 
+def mod_inverse(a, m):
+    #若python版本大於3.8 採用pow內建的mod inverse
+    if sys.version_info[0] > 3:
+        return pow(a,-1,m)
+    elif sys.version_info[0] == 3 and sys.version_info[1] >= 8:
+        return pow(a,-1,m)
+    else: # mod_inverse for version lower than python 3.8
+        m0 = m
+        y = 0
+        result = 1 
+        if (m == 1):
+            return 0 
+        while (a > 1):
+            q = a // m
+            tmp = m
+            m = a % m
+            a = tmp
+            tmp = y
+            y = result - q * y
+            result = tmp
+        if (result < 0):
+            result = result + m0
+        return result
+
 #加密函式，輸入待加密訊息(str)與n和公鑰
 #並將RSA加密後的數字透過base64編碼，使其能夠顯示
 def encrypt(plain_text,n,public_key):
@@ -133,8 +154,7 @@ def CRT_decrypt(cipher_text,p,q,private_key):
 def RSA_CRT_decrypt(cipher_num,p,q,private_key):
     dp = private_key % (p-1)
     dq = private_key % (q-1)
-    #q_inv = mod_inverse(q,p)
-    q_inv = pow(q,-1,p)
+    q_inv = mod_inverse(q,p)
     m1 = fast_power_mod(cipher_num,dp,p)
     m2 = fast_power_mod(cipher_num,dq,q)
     h = q_inv * (m1-m2) % p
@@ -154,6 +174,9 @@ def num2str(input):
     m_bytes = input.to_bytes((input.bit_length() + 7) // 8, 'little')
     m_str = m_bytes.decode('utf-8')
     return m_str
+
+
+
 
 # 主函式，同時負責輸入例外處理
 def main():
